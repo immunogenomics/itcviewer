@@ -5,5 +5,5 @@ rsync -avh \
     --exclude=*.Rproj \
     --exclude=*.png \
     --exclude=.* \
-    ~/work/github.com/immunogenomics/itc/ ig:/srv/shiny-server/itc/
+    ~/work/github.com/immunogenomics/itcviewer/ ig:/srv/shiny-server/itc/
 
