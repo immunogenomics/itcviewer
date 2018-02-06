@@ -35,7 +35,8 @@ function add_abstracts(query, pubmed_ids) {
         pubmed: pubmed_ids[i],
         title: item.innerHTML
       };
-    }).toArray().sort(dynamicSort('title')).map(function(item) {
+    // }).toArray().sort(dynamicSort('title')).map(function(item) {
+    }).toArray().map(function(item) {
       return '<li><a href="https://www.ncbi.nlm.nih.gov/pubmed/' +
         item.pubmed + '">' + item.title + '</a></li>';
     }).join('');
@@ -98,7 +99,7 @@ function fill_geneinfo(data) {
   '<p><b>Summary:</b> {summary}</p>' +
   '<p><b>iHOP:</b> <a target="_blank" href="http://www.ihop-net.org/UniPub/iHOP/index.html?field=all&search={symbol}&organism_id=1">link</a></p>' +
   '<p><b>GeneRIF:</b><div class="generif"><ul>{generif_list}</ul></div></p>' +
-  '<p><b>Pubmed:</b> "fibroblast AND {symbol}"' +
+  '<p><b>Pubmed:</b> "t cell" AND {symbol}' +
   '<div id="pubmed-abstracts"></div></p>';
   data.aliases = Array.isArray(data.alias) ? data.alias.join(", ") : data.alias;
   data.generif_list = data.generif.sort(dynamicSort('text')).map(function(d) {
@@ -108,7 +109,7 @@ function fill_geneinfo(data) {
     return '<li>' + d + '</li>';
   }).join('\n');
   geneinfo.innerHTML = format(form, data);
-  search_pubmed('fibroblast AND ' + data.symbol);
+  search_pubmed('"t cell" AND ' + data.symbol);
 }
 
 shinyjs.queryGene = function(params) {
