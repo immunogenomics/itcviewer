@@ -2,6 +2,5 @@
 
 A data viewer for the Innate T Cell project.
 
-See error logs in:
+<img src="screenshot.png" />
 
-    /var/log/shiny-server/*.log
