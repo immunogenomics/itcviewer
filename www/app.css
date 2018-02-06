@@ -1,0 +1,35 @@
+.shiny-bound-input, .twitter-typeahead, .tt-hint, .tt-input, .tt-input-group, .tt-menu {
+  width: 100%;
+}
+/*input typeahead tt-query shiny-bound-input*/
+.tt-dropdown-menu{
+    width: 100%;
+}
+
+.generif {
+  border: 1px solid gainsboro;
+  max-height: 200px;
+  overflow: auto;
+}
+
+#pubmed-abstracts {
+  border: 1px solid gainsboro;
+  max-height: 200px;
+  overflow: auto;
+}
+
+/*
+.shiny-options-group {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+*/
+
+.shiny-options-group .checkbox {
+    display: block;
+    float: left;
+    width: 16.6%;
+    margin-top: 5px;
+}
