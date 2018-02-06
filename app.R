@@ -70,6 +70,7 @@ plot_boxplot <- function(gene) {
   ensembl_id <- names(which(gene_symbols == gene))
   m$GENE <- as.numeric(log2tpm[ensembl_id,])
   gene_stats <- grad[ensembl_id,]
+  par(mar = c(2.3, 4.6, 3.1, 0.1))
   boxplot(
     formula = GENE ~ cell_type,
     data = m,
@@ -83,7 +84,8 @@ plot_boxplot <- function(gene) {
     cex.names = 1.5,
     cex.lab = 1.5,
     cex.axis = 1.5,
-    cex.main = 1.5
+    cex.main = 1.5,
+    margin = 0.2
   )
   # legend(
   #   "topleft",
@@ -139,27 +141,27 @@ panel_about <- tabPanel(
 panel_one_gene <- tabPanel(
   title = "One Gene",
     fluidPage(
-      h2("Expression across T cell subsets"),
+      h2("Expression along T cell innateness gradient"),
       fluidRow(
-        DT::dataTableOutput("grad_table")
-        # verbatimTextOutput('x4')
+        column(width = 6, plotOutput("rnaseq_one_gene")),
+        column(width = 6, DT::dataTableOutput("grad_table"))
       ),
       
-      hr(),
-      h2("Options"),
-      selectizeInput(
-        inputId = 'one_gene_symbol',
-        label = 'Gene:',
-        choices = NULL,
-        selected = 'TBX21',
-        size = 10
-      ),
+      # hr(),
+      # h2("Options"),
+      # selectizeInput(
+      #   inputId = 'one_gene_symbol',
+      #   label = 'Gene:',
+      #   choices = NULL,
+      #   selected = 'TBX21',
+      #   size = 10
+      # ),
       
-      hr(),
-      fluidRow(
-        plotOutput("rnaseq_one_gene")
-        #ggvisOutput("rnaseq_one_gene")
-      ),
+      # hr(),
+      # fluidRow(
+      #   plotOutput("rnaseq_one_gene")
+      #   #ggvisOutput("rnaseq_one_gene")
+      # ),
       
       hr(),
       h2("Gene Information"),
@@ -182,8 +184,8 @@ ui <- fluidPage(
     tags$link(
       rel = "stylesheet", type = "text/css", href = "app.css"
     ),
-    tags$link(rel="shortcut icon", href="favicon.ico")
-    # tags$style("#rnaseq_one_gene{min-width:1000px;}"),
+    tags$link(rel="shortcut icon", href="favicon.ico"),
+    tags$style("#rnaseq_one_gene{max-width:500px;}")
   ),
   # Application title
   navbarPage(
@@ -202,18 +204,18 @@ server <- function(input, output, session) {
   this_gene <- one_gene_symbol_default
   grad_table_genes <- NULL
   
-  updateSelectizeInput(
-    session = session,
-    inputId = 'one_gene_symbol',
-    choices = all_gene_symbols,
-    server = TRUE
-  )
+  # updateSelectizeInput(
+  #   session = session,
+  #   inputId = 'one_gene_symbol',
+  #   choices = all_gene_symbols,
+  #   server = TRUE
+  # )
   
   output$grad_table <- DT::renderDataTable({
     grad_table <- grad %>%
       select(Gene = GENE_NAME, Beta, StdErr, Pvalue) %>%
       arrange(Pvalue) %>%
-      head(100)
+      head(1e4)
     rownames(grad_table) <- 1:nrow(grad_table)
     grad_table_genes <<- grad_table$Gene
     numeric_cols <- colnames(grad_table)[which_numeric_cols(grad_table)]
@@ -229,9 +231,10 @@ server <- function(input, output, session) {
     grad_table_rowid <- input$grad_table_rows_selected
     if (length(grad_table_rowid)) {
       this_gene <- grad_table_genes[grad_table_rowid]
-    } else if (input$one_gene_symbol %in% all_gene_symbols) {
-      this_gene <- input$one_gene_symbol
     }
+    # else if (input$one_gene_symbol %in% all_gene_symbols) {
+    #   this_gene <- input$one_gene_symbol
+    # }
     # Query mygene.info
     js$queryGene(this_gene)
     if (this_gene %in% gene_symbols) {
