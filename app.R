@@ -2,18 +2,7 @@
 
 # Load packages, and install them if they are not installed.
 if (!require(pacman)) { install.packages("pacman") }
-pacman::p_load("shiny", "shinyjs", "ggplot2", "dplyr")
-
-# library(shinysky) # devtools::install_github("AnalytixWare/ShinySky")
-# library(scales)
-# library(viridis)
-# library(gridExtra)
-# library(RColorBrewer)
-# library(stringr)
-# library(limma)
-# library(DT)
-# library(ggvis)
-# library(magrittr)
+pacman::p_load("shiny", "shinyjs", "dplyr")
 
 #
 
@@ -84,8 +73,7 @@ plot_boxplot <- function(gene) {
     cex.names = 1.5,
     cex.lab = 1.5,
     cex.axis = 1.5,
-    cex.main = 1.5,
-    margin = 0.2
+    cex.main = 1.5
   )
   # legend(
   #   "topleft",
@@ -97,7 +85,7 @@ plot_boxplot <- function(gene) {
   #   cex = 1.5
   # )
 }
-plot_boxplot("TBX21")
+#plot_boxplot("TBX21")
 
 #
 
