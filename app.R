@@ -27,13 +27,13 @@ m$cell_type <- factor(
 
 m_colors <- list(
   "cell_type" = c(
-    "CD4" = "#0072B2",
-    "CD8" = "#56B4E9",
+    "CD4"  = "#0072B2",
+    "CD8"  = "#56B4E9",
     "MAIT" = "#009E73",
-    "NKT" = "#CC79A7",
-    "Vd1" = "#E69F00",
-    "Vd2" = "#D55E00",
-    "NK" = "#000000"
+    "NKT"  = "#CC79A7",
+    "Vd1"  = "#E69F00",
+    "Vd2"  = "#D55E00",
+    "NK"   = "#000000"
   )
 )
 
@@ -42,8 +42,6 @@ all_gene_symbols <- unname(gene_symbols)
 
 # The default gene to plot
 one_gene_symbol_default = "TBX21"
-
-font_size <- 20
 
 #
 
@@ -55,25 +53,25 @@ which_numeric_cols <- function(dat) {
   }))
 }
 
-plot_boxplot <- function(gene) {
+plot_boxplot <- function(gene, font_size = 1.5) {
   ensembl_id <- names(which(gene_symbols == gene))
   m$GENE <- as.numeric(log2tpm[ensembl_id,])
   gene_stats <- grad[ensembl_id,]
   par(mar = c(2.3, 4.6, 3.1, 0.1))
   boxplot(
-    formula = GENE ~ cell_type,
-    data = m,
-    col = m_colors$cell_type,
-    ylab = bquote("Log"[2]~"(TPM+1)"),
+    formula   = GENE ~ cell_type,
+    data      = m,
+    col       = m_colors$cell_type,
+    ylab      = bquote("Log"[2]~"(TPM+1)"),
     # main = gene,
-    main = sprintf(
+    main      = sprintf(
       "%s\nP = %s, Beta = %s",
       gene, signif(gene_stats$Pvalue, 2), signif(gene_stats$Beta, 2)
     ),
-    cex.names = 1.5,
-    cex.lab = 1.5,
-    cex.axis = 1.5,
-    cex.main = 1.5
+    cex.names = font_size,
+    cex.lab   = font_size,
+    cex.axis  = font_size,
+    cex.main  = font_size
   )
   # legend(
   #   "topleft",
@@ -85,7 +83,25 @@ plot_boxplot <- function(gene) {
   #   cex = 1.5
   # )
 }
-#plot_boxplot("TBX21")
+# plot_boxplot("TBX21")
+
+# library(ggvis)
+# m %>%
+#   ggvis(x = ~as.integer(cell_type), y = ~GENE, fill = ~cell_type) %>%
+#   layer_boxplots(width = 0.5) %>%
+#   add_axis("x", title = "", ticks = 0, properties = axis_props(
+#     labels = list(fontSize = 20),
+#     title = list(fontSize = 20)
+#   )) %>%
+#   add_axis("x", title = "", ticks = 7, properties = axis_props(
+#     labels = list(fontSize = 20),
+#     title = list(fontSize = 20)
+#   )) %>%
+#   add_axis("y", title = "Log2(TPM+1)", ticks = 5, properties = axis_props(
+#     labels = list(fontSize = 20),
+#     title = list(fontSize = 20)
+#   )) %>%
+#   hide_legend(scales = "fill")
 
 #
 
@@ -203,7 +219,7 @@ server <- function(input, output, session) {
     grad_table <- grad %>%
       select(Gene = GENE_NAME, Beta, StdErr, Pvalue) %>%
       arrange(Pvalue) %>%
-      head(1e4)
+      head(3e3)
     rownames(grad_table) <- 1:nrow(grad_table)
     grad_table_genes <<- grad_table$Gene
     numeric_cols <- colnames(grad_table)[which_numeric_cols(grad_table)]
@@ -216,6 +232,7 @@ server <- function(input, output, session) {
   }, server = FALSE)
   
   output$rnaseq_one_gene <- renderPlot({
+    width  <- session$clientData$output_image_width
     grad_table_rowid <- input$grad_table_rows_selected
     if (length(grad_table_rowid)) {
       this_gene <- grad_table_genes[grad_table_rowid]
@@ -226,24 +243,25 @@ server <- function(input, output, session) {
     # Query mygene.info
     js$queryGene(this_gene)
     if (this_gene %in% gene_symbols) {
-      plot_boxplot(this_gene)
+      plot_boxplot(this_gene, 1.5)
     }
   }, width = "auto", height = "auto")
   
-  #vis <- reactive({
-  #  limma_rowid <- input$grad_table_rows_selected
-  #  if (length(limma_rowid)) {
-  #    this_gene <- grad_table_genes[limma_rowid]
-  #  } else if (input$one_gene_symbol %in% all_gene_symbols) {
-  #    this_gene <- input$one_gene_symbol
-  #  }
-  #  # Query mygene.info
-  #  js$queryGene(this_gene)
-  #  if (this_gene %in% gene_symbols[rownames(log2tpm)]) {
-  #    plot_gene_by_stimulation_ggvis(this_gene, m, log2tpm)
-  #  }
-  #})
-  #vis %>% bind_shiny("rnaseq_one_gene")
+  # vis <- reactive({
+  #   grad_table_rowid <- input$grad_table_rows_selected
+  #   if (length(grad_table_rowid)) {
+  #     this_gene <- grad_table_genes[grad_table_rowid]
+  #   }
+  #   # else if (input$one_gene_symbol %in% all_gene_symbols) {
+  #   #   this_gene <- input$one_gene_symbol
+  #   # }
+  #   # Query mygene.info
+  #   js$queryGene(this_gene)
+  #   if (this_gene %in% gene_symbols) {
+  #     plot_boxplot_ggvis(this_gene)
+  #   }
+  # })
+  # vis %>% bind_shiny("rnaseq_one_gene")
 }
 
 #
