@@ -4,6 +4,10 @@
 if (!require(pacman)) { install.packages("pacman") }
 pacman::p_load("shiny", "shinyjs", "dplyr")
 
+# This is required if /srv/shiny-server is not owned by shiny:shiny
+# See https://github.com/ropensci/plotly/issues/494
+# pdf(NULL)
+
 #
 
 # Data ------------------------------------------------------------------------
