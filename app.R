@@ -33,8 +33,18 @@ m_colors <- list(
     "NKT"  = "#CC79A7",
     "Vd1"  = "#E69F00",
     "Vd2"  = "#D55E00",
-    "NK"   = "#000000"
+    "NK"   = "#606060"
   )
+)
+
+fancy_celltypes <- c(
+  "CD4"  = expression(paste("CD4" ^ "+", "T")),
+  "CD8"  = expression(paste("CD8" ^ "+", "T")),
+  "MAIT" = "MAIT",
+  "NKT"  = "iNKT",
+  "Vd1"  = expression(paste("V", delta, "1", sep = "")),
+  "Vd2"  = expression(paste("V", delta, "2", sep = "")),
+  "NK"   = "NK"
 )
 
 # Just the symbols
@@ -57,21 +67,35 @@ plot_boxplot <- function(gene, font_size = 1.5) {
   ensembl_id <- names(which(gene_symbols == gene))
   m$GENE <- as.numeric(log2tpm[ensembl_id,])
   gene_stats <- grad[ensembl_id,]
-  par(mar = c(2.3, 4.6, 3.1, 0.1))
+  par(mar = c(5, 4.6, 3.1, 0.1))
   boxplot(
     formula   = GENE ~ cell_type,
     data      = m,
     col       = m_colors$cell_type,
-    ylab      = bquote("Log"[2]~"(TPM+1)"),
-    # main = gene,
+    ylab      = bquote("log"[2]~"(TPM+1)"),
+    #main      = gene,
     main      = sprintf(
       "%s\nP = %s, Beta = %s",
       gene, signif(gene_stats$Pvalue, 2), signif(gene_stats$Beta, 2)
     ),
-    cex.names = font_size,
     cex.lab   = font_size,
     cex.axis  = font_size,
-    cex.main  = font_size
+    cex.main  = font_size,
+    names     = rep("", 7)
+  )
+  # par("usr")
+  #   A vector of the form c(x1, x2, y1, y2) giving the extremes of the user 
+  #   coordinates of the plotting region. 
+  y1 <- par("usr")[3]
+  y2 <- par("usr")[4]
+  text(
+    x      = seq(1, 7, by = 1),
+    y      = y1 - (y2 - y1) / 15,
+    srt    = 45,
+    adj    = 1,
+    xpd    = TRUE,
+    cex    = 1.5,
+    labels = fancy_celltypes
   )
   # legend(
   #   "topleft",
@@ -83,7 +107,7 @@ plot_boxplot <- function(gene, font_size = 1.5) {
   #   cex = 1.5
   # )
 }
-# plot_boxplot("TBX21")
+plot_boxplot("TBX21")
 
 # library(ggvis)
 # m %>%
@@ -113,12 +137,12 @@ panel_about <- tabPanel(
     h1("Innate T Cells"),
     p(
       "This data comes from the laboratories of",
-      " Dr. Michael Brenner and Dr. Soumya Raychaudhuri."
+      " Dr. Patrick Brenan, Dr. Soumya Raychaudhuri and Dr. Michael Brenner."
     ),
     h2("Disclaimer"),
     p(
       "Currently, this is private data intended to be shared internally,",
-      " only with lab members."
+      " only with lab members (and reviewers)."
     ),
     p(
       strong(
