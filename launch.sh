@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rsync -avh \
+rsync -rlzuvh \
     --exclude=launch.sh \
     --exclude=*.Rproj \
     --exclude=*.png \
