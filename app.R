@@ -83,14 +83,9 @@ plot_boxplot <- function(gene, font_size = 1.5) {
     cex.main  = font_size,
     names     = rep("", 7)
   )
-  # par("usr")
-  #   A vector of the form c(x1, x2, y1, y2) giving the extremes of the user 
-  #   coordinates of the plotting region. 
-  y1 <- par("usr")[3]
-  y2 <- par("usr")[4]
   text(
     x      = seq(1, 7, by = 1),
-    y      = y1 - (y2 - y1) / 15,
+    y      = -0.5,
     srt    = 45,
     adj    = 1,
     xpd    = TRUE,
