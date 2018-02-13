@@ -242,7 +242,7 @@ server <- function(input, output, session) {
     grad_table <- grad %>%
       select(Gene = GENE_NAME, Beta, StdErr, Pvalue) %>%
       arrange(Pvalue) %>%
-      head(3e3)
+      head(nrow(grad))
     rownames(grad_table) <- 1:nrow(grad_table)
     grad_table_genes <<- grad_table$Gene
     numeric_cols <- colnames(grad_table)[which_numeric_cols(grad_table)]
