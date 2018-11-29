@@ -61,62 +61,11 @@ which_numeric_cols <- function(dat) {
 
 # User interface --------------------------------------------------------------
 
-panel_about <- tabPanel(
-  title = "About",
-  mainPanel(
-    h1("Innate T Cells"),
-    HTML(
-      "<p>This data comes from the laboratories of:
-      <ul>
-<li><a href='https://connects.catalyst.harvard.edu/Profiles/display/Person/56904'>Dr. Patrick J. Brennan</a></li>
-<li><a href='https://immunogenomics.hms.harvard.edu/'>Dr. Soumya Raychaudhuri</a></li>
-<li><a href='https://www.hms.harvard.edu/dms/immunology/fac/Brenner.php'>Dr. Michael B. Brenner</a></li>
-      </ul>
-      </p>"
-    ),
-    HTML(
-      "<p>Read our paper to learn more:</p>
-      <p>
-        <b>A genome-wide innateness gradient defines the functional state of human innate T cells.</b>
-        Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes,
-        Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri,
-        Patrick J. Brennan. <i>bioRxiv</i> 2018.
-        <a href='https://doi.org/10.1101/280370'>https://doi.org/10.1101/280370</a>
-      </p>"
-    ),
-    h2("Disclaimer"),
-    # p(
-    #   "Currently, this is private data intended to be shared internally,",
-    #   " only with lab members (and reviewers)."
-    # ),
-    # p(
-    #   strong(
-    #     "Sharing any data from this site with anyone outside of the",
-    #     " lab is prohibited."
-    #   )
-    # ),
-    p(
-      "This website provides access to",
-      " our data analysis results. The content of this site is",
-      " subject to change at any time without notice. We hope that you",
-      " find it useful, but we provide it 'as is' without warranty of",
-      " any kind, express or implied."
-    ),
-    h2("Contact"),
-    p(
-      "Please ",
-      a("contact Dr. Maria Gutierrez", href = "mailto:mgutierr@broadinstitute.org"),
-      " with any questions, requests, or comments."
-    ),
-    br(),
-    br()
-  )
-)
-
 # panel_one_gene <- tabPanel(
 #   title = "One Gene",
 panel_one_gene <- fluidPage(
-      h2("Expression along T cell innateness gradient"),
+      h1("Innate T Cells"),
+      h2("Explore gene expression along the T cell innateness gradient"),
       fluidRow(
         # column(width = 6, plotOutput("rnaseq_one_gene")),
         column(width = 6, htmlOutput("rnaseq_one_gene")),
@@ -148,17 +97,60 @@ panel_one_gene <- fluidPage(
       
       br(),
       hr(),
-      h2("Gene Information"),
-      div(id = "geneinfo")
+      div(id = "geneinfo"),
+      
+      hr(),
+      h2("About"),
+      HTML(
+        "<p>The data presented here comes from the laboratories of:
+        <ul>
+        <li><a href='https://connects.catalyst.harvard.edu/Profiles/display/Person/56904'>Dr. Patrick J. Brennan</a></li>
+        <li><a href='https://immunogenomics.hms.harvard.edu/'>Dr. Soumya Raychaudhuri</a></li>
+        <li><a href='https://www.hms.harvard.edu/dms/immunology/fac/Brenner.php'>Dr. Michael B. Brenner</a></li>
+        </ul>
+        </p>"
+      ),
+      HTML(
+        "<p>Read our paper to learn more:</p>
+        <p>
+        <b>A genome-wide innateness gradient defines the functional state of human innate T cells.</b>
+        Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes,
+        Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri,
+        Patrick J. Brennan. <i>bioRxiv</i> 2018.
+        <a href='https://doi.org/10.1101/280370'>https://doi.org/10.1101/280370</a>
+        </p>"
+      ),
+      h2("Contact"),
+      p(
+        "Please ",
+        a("contact Dr. Maria Gutierrez", href = "mailto:mgutierr@broadinstitute.org"),
+        " with any questions, requests, or comments."
+      ),
+      h2("Disclaimer"),
+      # p(
+      #   "Currently, this is private data intended to be shared internally,",
+      #   " only with lab members (and reviewers)."
+      # ),
+      # p(
+      #   strong(
+      #     "Sharing any data from this site with anyone outside of the",
+      #     " lab is prohibited."
+      #   )
+      # ),
+      p(
+        "The content of this site is",
+        " subject to change at any time without notice. We hope that you",
+        " find it useful, but we provide it 'as is' without warranty of",
+        " any kind, express or implied."
+      ),
+      br()
       
     ) # fluidPage
 # ) # tabPanel
 
 panel_data <- tabPanel(
-  title = "Data",
-  # tabsetPanel(
-    panel_one_gene
-  # )
+  title = "Home",
+  panel_one_gene
 )
 
 ui <- fluidPage(
@@ -175,13 +167,12 @@ ui <- fluidPage(
   # Application title
   navbarPage(
     title = "Innate T Cells",
-    panel_data,
-    panel_about
+    panel_data
   ),
   HTML(
     "<footer class='page-footer gray'>
       <div class='text-center' style='padding:1rem;background-color: #f8f8f8;'>
-      This website was created by <a href='https://slowkow.com'>Kamil Slowikowski</a>.
+      This website was created by <a href='https://slowkow.com'>Kamil Slowikowski</a>
       </div>
     </footer>"
   )
@@ -214,6 +205,10 @@ server <- function(input, output, session) {
     # Javascript-enabled table.
     DT::datatable(
       data = grad_table,
+      options = list(
+        "lengthChange" = FALSE,
+        "orderClasses" = TRUE
+      ),
       selection = "single"
     ) %>%
     DT::formatSignif(columns = numeric_cols, digits = 2)
