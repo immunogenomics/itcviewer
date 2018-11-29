@@ -31,7 +31,7 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
     legend.text     = element_text(size = 18),
     # Top, Right, Bottom, Left
     legend.margin   = margin(0, 0, 0, 0),
-    legend.box.margin   = margin(-20, -10, 0, -10)
+    legend.box.margin   = margin(-10, -10, 0, -10)
   )
   theme_umap_2 <- theme_bw(base_size = 25) + theme(
     legend.position = "bottom",
@@ -43,7 +43,7 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
     legend.text     = element_text(size = 18),
     # Top, Right, Bottom, Left
     legend.margin   = margin(0, 0, 0, 0),
-    legend.box.margin   = margin(-20, -10, 0, -10)
+    legend.box.margin   = margin(-10, -10, 0, -10)
   )
   p1 <- ggplot() +
     geom_point(
