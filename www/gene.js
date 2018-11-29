@@ -93,7 +93,7 @@ function fill_geneinfo(data) {
   console.log(data);
   var geneinfo = document.getElementById('geneinfo');
 //  // var el = document.createElement("div");
-  var form = '<h3>{symbol}</h3>' +
+  var form = '<h3><i>{symbol}</i></h3>' +
   '<p>{name}</p>' +
   '<p><b>Aliases:</b> {aliases}</p>' +
   '<p><b>Summary:</b> {summary}</p>' +
