@@ -63,7 +63,11 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
       name    = bquote("Log"[2]~"(CPM+1)  ")
     ) +
     guides(
-      fill  = guide_colorbar(title.position = "left", barwidth = 7, barheight = 0.7),
+      fill  = guide_colorbar(
+        ticks.colour = "grey50",
+        frame.colour = "black",
+        title.position = "left", barwidth = 7, barheight = 1
+      ),
       alpha = "none"
     ) +
     labs(x = NULL, y = NULL, title = substitute(italic(x), list(x = title))) +
