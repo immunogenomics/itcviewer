@@ -102,7 +102,8 @@ function fill_geneinfo(data) {
   '<p><b>Pubmed:</b> "t-cell" AND {symbol}' +
   '<div id="pubmed-abstracts"></div></p>';
   data.aliases = Array.isArray(data.alias) ? data.alias.join(", ") : data.alias;
-  data.generif_list = data.generif.sort(dynamicSort('text')).map(function(d) {
+  //data.generif_list = data.generif.sort(dynamicSort('text')).map(function(d) {
+  data.generif_list = data.generif.map(function(d) {
     return '<a href="https://www.ncbi.nlm.nih.gov/pubmed/' + d.pubmed + '">' +
       d.text + '</a>';
   }).map(function(d) {
