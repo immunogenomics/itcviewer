@@ -28,7 +28,10 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
     panel.grid      = element_blank(),
     panel.border    = element_rect(size = 0.5),
     plot.title      = element_text(size = 30),
-    legend.text     = element_text(size = 18)
+    legend.text     = element_text(size = 18),
+    # Top, Right, Bottom, Left
+    legend.margin   = margin(0, 0, 0, 0),
+    legend.box.margin   = margin(-20, -10, 0, -10)
   )
   theme_umap_2 <- theme_bw(base_size = 25) + theme(
     legend.position = "bottom",
@@ -37,7 +40,10 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
     panel.grid      = element_blank(),
     panel.border    = element_rect(size = 0.5),
     plot.title      = element_text(size = 30),
-    legend.text     = element_text(size = 18)
+    legend.text     = element_text(size = 18),
+    # Top, Right, Bottom, Left
+    legend.margin   = margin(0, 0, 0, 0),
+    legend.box.margin   = margin(-20, -10, 0, -10)
   )
   p1 <- ggplot() +
     geom_point(
@@ -57,7 +63,7 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
       name    = bquote("Log"[2]~"(CPM+1)  ")
     ) +
     guides(
-      fill  = guide_colorbar(barwidth = 7, barheight = 0.7),
+      fill  = guide_colorbar(title.position = "left", barwidth = 7, barheight = 0.7),
       alpha = "none"
     ) +
     labs(x = NULL, y = NULL, title = substitute(italic(x), list(x = title))) +
@@ -75,13 +81,19 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
       stroke  = 0.12
     ) +
     # scale_fill_brewer(type = "qual", palette = "Set3", name = "Cluster") +
-    # scale_fill_manual(values = m_colors$cluster, name = "Cluster") +
-    guides(fill = guide_legend(title = NULL, nrow = 2, override.aes = list(size = 5))) +
-    labs(x = NULL, y = NULL, title = "Clusters") +
+    scale_fill_manual(
+      name = "Cell Type",
+      labels = fancy_celltypes,
+      values = m_colors$cell_type
+    ) +
+    guides(
+      fill = guide_legend(title = NULL, nrow = 2, override.aes = list(size = 5))
+    ) +
+    labs(x = NULL, y = NULL, title = "Cell Types") +
     theme_umap_2
   
   bottom_text <- sprintf(
-    "%s cells, %s (%s%%) nonzero cells",
+    "%s cells, %s (%s%%) cells with detected expression",
     nrow(dat),
     n_nonzero,
     signif(100 * n_nonzero / nrow(dat), 3)
@@ -94,5 +106,8 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
     )
   )
 }
-# plot_umap(s$meta)
-
+# bad_gene <- "TRBV6-5"
+# bad_gene %in% rownames(s$log2cpm)
+# s$meta$marker <- as.numeric(s$log2cpm[bad_gene,])
+plot_umap(s$meta)
+# 

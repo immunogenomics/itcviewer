@@ -10,7 +10,9 @@ pacman::p_load(
   "shiny",
   "shinyjs",
   "dplyr",
-  "DT"
+  "DT",
+  "glue",
+  "stringr"
 )
 # devtools::install_github("thomasp85/patchwork")
 
@@ -26,54 +28,16 @@ source("R/load-data.R")
 
 # Functions -------------------------------------------------------------------
 
+source("R/plot-boxplot.R")
 source("R/plot-umap.R")
+source("R/save-figure.R")
+source("R/optimize-png.R")
 
 which_numeric_cols <- function(dat) {
   which(sapply(seq(ncol(dat)), function(i) {
     is.numeric(dat[,i])
   }))
 }
-
-plot_boxplot <- function(gene, font_size = 1.5) {
-  ensembl_id <- names(which(gene_symbols == gene))
-  m$GENE <- as.numeric(log2tpm[ensembl_id,])
-  gene_stats <- grad[ensembl_id,]
-  par(mar = c(5, 4.6, 3.1, 0.1))
-  boxplot(
-    formula   = GENE ~ cell_type,
-    data      = m,
-    col       = m_colors$cell_type,
-    ylab      = bquote("log"[2]~"(TPM+1)"),
-    #main      = gene,
-    main      = sprintf(
-      "%s\nP = %s, Beta = %s",
-      gene, signif(gene_stats$Pvalue, 2), signif(gene_stats$Beta, 2)
-    ),
-    cex.lab   = font_size,
-    cex.axis  = font_size,
-    cex.main  = font_size,
-    names     = rep("", 7)
-  )
-  text(
-    x      = seq(1, 7, by = 1),
-    y      = -0.5,
-    srt    = 45,
-    adj    = 1,
-    xpd    = TRUE,
-    cex    = 1.5,
-    labels = fancy_celltypes
-  )
-  # legend(
-  #   "topleft",
-  #   legend = c(
-  #     sprintf("P = %s", signif(gene_stats$Pvalue, 2)),
-  #     sprintf("Beta = %s", signif(gene_stats$Beta, 2))
-  #   ),
-  #   bty = "n",
-  #   cex = 1.5
-  # )
-}
-# plot_boxplot("TBX21")
 
 # library(ggvis)
 # m %>%
@@ -101,24 +65,39 @@ panel_about <- tabPanel(
   title = "About",
   mainPanel(
     h1("Innate T Cells"),
-    p(
-      "This data comes from the laboratories of",
-      " Dr. Patrick Brenan, Dr. Soumya Raychaudhuri and Dr. Michael Brenner."
+    HTML(
+      "<p>This data comes from the laboratories of:
+      <ul>
+<li><a href='https://connects.catalyst.harvard.edu/Profiles/display/Person/56904'>Dr. Patrick J. Brennan</a></li>
+<li><a href='https://immunogenomics.hms.harvard.edu/'>Dr. Soumya Raychaudhuri</a></li>
+<li><a href='https://www.hms.harvard.edu/dms/immunology/fac/Brenner.php'>Dr. Michael B. Brenner</a></li>
+      </ul>
+      </p>"
+    ),
+    HTML(
+      "<p>Read our paper to learn more:</p>
+      <p>
+        <b>A genome-wide innateness gradient defines the functional state of human innate T cells.</b>
+        Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes,
+        Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri,
+        Patrick J. Brennan. <i>bioRxiv</i> 2018.
+        <a href='https://doi.org/10.1101/280370'>https://doi.org/10.1101/280370</a>
+      </p>"
     ),
     h2("Disclaimer"),
+    # p(
+    #   "Currently, this is private data intended to be shared internally,",
+    #   " only with lab members (and reviewers)."
+    # ),
+    # p(
+    #   strong(
+    #     "Sharing any data from this site with anyone outside of the",
+    #     " lab is prohibited."
+    #   )
+    # ),
     p(
-      "Currently, this is private data intended to be shared internally,",
-      " only with lab members (and reviewers)."
-    ),
-    p(
-      strong(
-        "Sharing any data from this site with anyone outside of the",
-        " lab is prohibited."
-      )
-    ),
-    p(
-      "This website is an experiment in providing early access to",
-      " preliminary data analysis results. The content of this site is",
+      "This website provides access to",
+      " our data analysis results. The content of this site is",
       " subject to change at any time without notice. We hope that you",
       " find it useful, but we provide it 'as is' without warranty of",
       " any kind, express or implied."
@@ -126,22 +105,29 @@ panel_about <- tabPanel(
     h2("Contact"),
     p(
       "Please ",
-      a("contact us", href = "mailto:mgutierr@broadinstitute.org"),
-      " us with any questions, requests, or comments."
-    )
+      a("contact Dr. Maria Gutierrez", href = "mailto:mgutierr@broadinstitute.org"),
+      " with any questions, requests, or comments."
+    ),
+    br(),
+    br()
   )
 )
 
-panel_one_gene <- tabPanel(
-  title = "One Gene",
-    fluidPage(
+# panel_one_gene <- tabPanel(
+#   title = "One Gene",
+panel_one_gene <- fluidPage(
       h2("Expression along T cell innateness gradient"),
       fluidRow(
-        column(width = 6, plotOutput("rnaseq_one_gene")),
+        # column(width = 6, plotOutput("rnaseq_one_gene")),
+        column(width = 6, htmlOutput("rnaseq_one_gene")),
         column(width = 6, DT::dataTableOutput("grad_table"))
       ),
       fluidRow(
-        column(width = 12, plotOutput("scrnaseq_umap"))
+        # column(width = 12, plotOutput("scrnaseq_umap"))
+        column(
+          width = 12,
+          htmlOutput("scrnaseq_umap")
+        )
       ),
       
       # hr(),
@@ -166,13 +152,13 @@ panel_one_gene <- tabPanel(
       div(id = "geneinfo")
       
     ) # fluidPage
-) # tabPanel
+# ) # tabPanel
 
 panel_data <- tabPanel(
   title = "Data",
-  tabsetPanel(
+  # tabsetPanel(
     panel_one_gene
-  )
+  # )
 )
 
 ui <- fluidPage(
@@ -183,13 +169,21 @@ ui <- fluidPage(
       rel = "stylesheet", type = "text/css", href = "app.css"
     ),
     tags$link(rel="shortcut icon", href="favicon.ico"),
-    tags$style("#rnaseq_one_gene{max-width:500px;}")
+    tags$style("#rnaseq_one_gene{max-width:500px;}"),
+    tags$style("#scrnaseq_umap{margin:auto;max-width:800px;}")
   ),
   # Application title
   navbarPage(
     title = "Innate T Cells",
     panel_data,
     panel_about
+  ),
+  HTML(
+    "<footer class='page-footer gray'>
+      <div class='text-center' style='padding:1rem;background-color: #f8f8f8;'>
+      This website was created by <a href='https://slowkow.com'>Kamil Slowikowski</a>.
+      </div>
+    </footer>"
   )
 )
 
@@ -225,33 +219,78 @@ server <- function(input, output, session) {
     DT::formatSignif(columns = numeric_cols, digits = 2)
   }, server = TRUE)
   
-  output$rnaseq_one_gene <- renderPlot({
-    width  <- session$clientData$output_image_width
+  # output$rnaseq_one_gene <- renderPlot({
+  #   width  <- session$clientData$output_image_width
+  #   grad_table_rowid <- input$grad_table_rows_selected
+  #   if (length(grad_table_rowid)) {
+  #     this_gene <- grad_table_genes[grad_table_rowid]
+  #   }
+  #   # else if (input$one_gene_symbol %in% all_gene_symbols) {
+  #   #   this_gene <- input$one_gene_symbol
+  #   # }
+  #   # Query mygene.info
+  #   js$queryGene(this_gene)
+  #   if (this_gene %in% gene_symbols) {
+  #     plot_boxplot(this_gene, 1.5)
+  #   }
+  # }, width = "auto", height = "auto")
+  
+  output$rnaseq_one_gene <- renderText({
     grad_table_rowid <- input$grad_table_rows_selected
     if (length(grad_table_rowid)) {
       this_gene <- grad_table_genes[grad_table_rowid]
     }
-    # else if (input$one_gene_symbol %in% all_gene_symbols) {
-    #   this_gene <- input$one_gene_symbol
-    # }
     # Query mygene.info
     js$queryGene(this_gene)
     if (this_gene %in% gene_symbols) {
       plot_boxplot(this_gene, 1.5)
     }
-  }, width = "auto", height = "auto")
+    retval <- "<div></div>"
+    if (this_gene %in% gene_symbols) {
+      retval <- save_figure(
+        filename = glue("rnaseq_boxplot_{marker}.png", marker = this_gene),
+        width = 6, height = 5, dpi = 300,
+        html_alt = this_gene,
+        ggplot_function = function() { plot_boxplot(this_gene) }
+      )
+    }
+    retval
+  })
   
-  output$scrnaseq_umap <- renderPlot({
-    width <- session$clientData$output_image_width
+  # output$scrnaseq_umap <- renderPlot({
+  #   width <- session$clientData$output_image_width
+  #   grad_table_rowid <- input$grad_table_rows_selected
+  #   if (length(grad_table_rowid)) {
+  #     this_gene <- grad_table_genes[grad_table_rowid]
+  #   }
+  #   if (this_gene %in% rownames(s$log2cpm)) {
+  #     s$meta$marker <- as.numeric(s$log2cpm[this_gene,])
+  #     plot_umap(s$meta, title = this_gene)
+  #   }
+  # }, width = "auto", height = 500)
+  
+  output$scrnaseq_umap <- renderText({
     grad_table_rowid <- input$grad_table_rows_selected
     if (length(grad_table_rowid)) {
       this_gene <- grad_table_genes[grad_table_rowid]
     }
+    retval <- glue(
+      "<div>Fewer than 10 cells express <i>{gene}</i>.</div>",
+      gene = this_gene
+    )
     if (this_gene %in% rownames(s$log2cpm)) {
       s$meta$marker <- as.numeric(s$log2cpm[this_gene,])
-      plot_umap(s$meta, title = this_gene)
+      if (sum(s$meta$marker > 10)) {
+        retval <- save_figure(
+          filename = glue("scrnaseq_umap_{marker}.png", marker = this_gene),
+          width = 10, height = 6, dpi = 300,
+          html_alt = this_gene,
+          ggplot_function = function() { plot_umap(s$meta, title = this_gene) }
+        )
+      }
     }
-  }, width = "auto", height = 500)
+    retval
+  })
   
   # vis <- reactive({
   #   grad_table_rowid <- input$grad_table_rows_selected
