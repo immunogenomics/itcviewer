@@ -2,7 +2,17 @@
 
 # Load packages, and install them if they are not installed.
 if (!require(pacman)) { install.packages("pacman") }
-pacman::p_load("shiny", "shinyjs", "dplyr")
+pacman::p_load(
+  "data.table",
+  "ggplot2",
+  "patchwork",
+  "magrittr",
+  "shiny",
+  "shinyjs",
+  "dplyr",
+  "DT"
+)
+# devtools::install_github("thomasp85/patchwork")
 
 # This is required if /srv/shiny-server is not owned by shiny:shiny
 # See https://github.com/ropensci/plotly/issues/494
@@ -12,54 +22,11 @@ pacman::p_load("shiny", "shinyjs", "dplyr")
 
 # Data ------------------------------------------------------------------------
 
-# Load: m log2cpm gene_symbols meta_colors
-load("data/ITC_log2tpm_forShiny.rda")
-
-# Mapping between Ensembl and Symbol
-gene_symbols <- unlist(split(grad$GENE_NAME, grad$Row.names))
-
-rownames(grad) <- grad$Row.names
-grad$Row.names <- NULL
-
-# Sanity check
-stopifnot(all(m$sampleID == colnames(log2tpm)))
-
-m$cell_type <- factor(
-  x = m$cell_type,
-  levels = c("CD4", "CD8", "MAIT", "NKT", "Vd1", "Vd2", "NK")
-)
-
-m_colors <- list(
-  "cell_type" = c(
-    "CD4"  = "#0072B2",
-    "CD8"  = "#56B4E9",
-    "MAIT" = "#009E73",
-    "NKT"  = "#CC79A7",
-    "Vd1"  = "#E69F00",
-    "Vd2"  = "#D55E00",
-    "NK"   = "#606060"
-  )
-)
-
-fancy_celltypes <- c(
-  "CD4"  = expression(paste("CD4" ^ "+", "T")),
-  "CD8"  = expression(paste("CD8" ^ "+", "T")),
-  "MAIT" = "MAIT",
-  "NKT"  = "iNKT",
-  "Vd1"  = expression(paste("V", delta, "1", sep = "")),
-  "Vd2"  = expression(paste("V", delta, "2", sep = "")),
-  "NK"   = "NK"
-)
-
-# Just the symbols
-all_gene_symbols <- unname(gene_symbols)
-
-# The default gene to plot
-one_gene_symbol_default = "TBX21"
-
-#
+source("R/load-data.R")
 
 # Functions -------------------------------------------------------------------
+
+source("R/plot-umap.R")
 
 which_numeric_cols <- function(dat) {
   which(sapply(seq(ncol(dat)), function(i) {
@@ -106,7 +73,7 @@ plot_boxplot <- function(gene, font_size = 1.5) {
   #   cex = 1.5
   # )
 }
-plot_boxplot("TBX21")
+# plot_boxplot("TBX21")
 
 # library(ggvis)
 # m %>%
@@ -173,6 +140,9 @@ panel_one_gene <- tabPanel(
         column(width = 6, plotOutput("rnaseq_one_gene")),
         column(width = 6, DT::dataTableOutput("grad_table"))
       ),
+      fluidRow(
+        column(width = 12, plotOutput("scrnaseq_umap"))
+      ),
       
       # hr(),
       # h2("Options"),
@@ -190,6 +160,7 @@ panel_one_gene <- tabPanel(
       #   #ggvisOutput("rnaseq_one_gene")
       # ),
       
+      br(),
       hr(),
       h2("Gene Information"),
       div(id = "geneinfo")
@@ -252,7 +223,7 @@ server <- function(input, output, session) {
       selection = "single"
     ) %>%
     DT::formatSignif(columns = numeric_cols, digits = 2)
-  }, server = FALSE)
+  }, server = TRUE)
   
   output$rnaseq_one_gene <- renderPlot({
     width  <- session$clientData$output_image_width
@@ -269,6 +240,18 @@ server <- function(input, output, session) {
       plot_boxplot(this_gene, 1.5)
     }
   }, width = "auto", height = "auto")
+  
+  output$scrnaseq_umap <- renderPlot({
+    width <- session$clientData$output_image_width
+    grad_table_rowid <- input$grad_table_rows_selected
+    if (length(grad_table_rowid)) {
+      this_gene <- grad_table_genes[grad_table_rowid]
+    }
+    if (this_gene %in% rownames(s$log2cpm)) {
+      s$meta$marker <- as.numeric(s$log2cpm[this_gene,])
+      plot_umap(s$meta, title = this_gene)
+    }
+  }, width = "auto", height = 500)
   
   # vis <- reactive({
   #   grad_table_rowid <- input$grad_table_rows_selected
