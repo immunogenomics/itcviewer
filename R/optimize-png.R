@@ -13,7 +13,7 @@ optimize_png <- function(filename) {
       "%s-fs8.png", substr(filename, 1, nchar(filename) - 4)
     )
     command <- sprintf(
-      "pngquant --speed=2 --ext -fs8.png -- %s && mv -f %s %s",
+      "pngquant --speed=3 --ext -fs8.png -- %s && mv -f %s %s",
       filename, opt_filename, filename
     )
     system(command)
