@@ -6,6 +6,36 @@
     width: 100%;
 }
 
+body {
+  max-width: 950px;
+  margin: auto;
+  /*
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 20px grey;
+  background: linear-gradient(15deg,#fff8fd 0,#e4f2ff 100%) fixed;
+  background: linear-gradient(15deg,#fff8fd8a 0,#e4f2ff94 100%) fixed;
+  */
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.container-fluid {
+  background-color: white;
+}
+
+@media (max-width: 500px) {
+  .container-fluid {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+#tsne_marker_plot img {
+  max-width: 100%;
+  width: 100%;
+  height: auto
+}
+
 .generif {
   border: 1px solid gainsboro;
   max-height: 200px;
@@ -18,18 +48,30 @@
   overflow: auto;
 }
 
-/*
-.shiny-options-group {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
-}
-*/
-
 .shiny-options-group .checkbox {
     display: block;
     float: left;
     width: 16.6%;
     margin-top: 5px;
+}
+
+/*.myfooter {
+  padding: 0.8rem;
+  background-color: #f8f8f8;
+  border-radius: 500px;
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20rem;
+}*/
+
+.myfooter {
+  padding: 1rem;
+  border-radius: 500px;
+  margin: 10rem auto 20rem auto;
+}
+
+.mypaper {
+    padding: 3rem;
+    border: 1px solid #ccc;
 }

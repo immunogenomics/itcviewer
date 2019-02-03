@@ -12,7 +12,8 @@ pacman::p_load(
   "dplyr",
   "DT",
   "glue",
-  "stringr"
+  "stringr",
+  "scales"
 )
 # devtools::install_github("thomasp85/patchwork")
 
@@ -75,6 +76,7 @@ panel_one_gene <- fluidPage(
         # column(width = 12, plotOutput("scrnaseq_umap"))
         column(
           width = 12,
+          h3("Single-cell RNA-seq"),
           htmlOutput("scrnaseq_umap")
         )
       ),
@@ -100,7 +102,22 @@ panel_one_gene <- fluidPage(
       div(id = "geneinfo"),
       
       hr(),
-      h2("About"),
+      HTML(
+        "<h2>Read the paper</h2>
+        <p class='mypaper'>
+        <b>A genome-wide innateness gradient defines the functional state of human innate T cells.</b>
+        Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes,
+        Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri,
+        Patrick J. Brennan. <i>bioRxiv</i> 2018.
+        <a href='https://doi.org/10.1101/280370'>https://doi.org/10.1101/280370</a>
+        </p>"
+      ),
+      h2("Contact us"),
+      p(
+        "Please ",
+        a("contact Dr. Maria Gutierrez", href = "mailto:mgutierr@broadinstitute.org"),
+        " with any questions, requests, or comments."
+      ),
       HTML(
         "<p>The data presented here comes from the laboratories of:
         <ul>
@@ -110,23 +127,7 @@ panel_one_gene <- fluidPage(
         </ul>
         </p>"
       ),
-      HTML(
-        "<p>Read our paper to learn more:</p>
-        <p>
-        <b>A genome-wide innateness gradient defines the functional state of human innate T cells.</b>
-        Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes,
-        Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri,
-        Patrick J. Brennan. <i>bioRxiv</i> 2018.
-        <a href='https://doi.org/10.1101/280370'>https://doi.org/10.1101/280370</a>
-        </p>"
-      ),
-      h2("Contact"),
-      p(
-        "Please ",
-        a("contact Dr. Maria Gutierrez", href = "mailto:mgutierr@broadinstitute.org"),
-        " with any questions, requests, or comments."
-      ),
-      h2("Disclaimer"),
+      h4("Disclaimer"),
       # p(
       #   "Currently, this is private data intended to be shared internally,",
       #   " only with lab members (and reviewers)."
@@ -170,8 +171,8 @@ ui <- fluidPage(
     panel_data
   ),
   HTML(
-    "<footer class='page-footer gray'>
-      <div class='text-center' style='padding:1rem;background-color: #f8f8f8;'>
+    "<footer class='myfooter page-footer'>
+      <div class='text-center'>
       This website was created by <a href='https://slowkow.com'>Kamil Slowikowski</a>
       </div>
     </footer>"

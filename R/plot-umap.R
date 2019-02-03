@@ -47,26 +47,44 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
   )
   p1 <- ggplot() +
     geom_point(
-      data    = dat[order(dat$marker),],
+      data    = subset(dat, marker <= 0),
+      mapping = aes_string(x = umap_x, y = umap_y),
+      size    = point_size,
+      shape   = 19,
+      color   = "grey95"
+    ) +
+    geom_point(
+      data    = subset(dat[order(dat$marker),], marker > 0),
       mapping = aes_string(x = umap_x, y = umap_y, fill = "marker"),
       size    = point_size,
       shape   = 21,
       stroke  = 0.15
     ) +
+    # scale_fill_gradientn(
+    #   # Linear scale
+    #   # colours = fill_palette,
+    #   # Quantile scale
+    #   colours = colorRampPalette(fill_palette)(length(fill_values)),
+    #   values  = fill_values,
+    #   breaks  = scales::pretty_breaks(n = 4),
+    #   name    = bquote("Log"[2]~"(CPM+1)  ")
+    # ) +
     scale_fill_gradientn(
       # Linear scale
       # colours = fill_palette,
       # Quantile scale
-      colours = colorRampPalette(fill_palette)(length(fill_values)),
-      values  = fill_values,
+      colours = colorRampPalette(fill_palette)(9),
+      # values  = fill_values,
       breaks  = scales::pretty_breaks(n = 4),
       name    = bquote("Log"[2]~"(CPM+1)  ")
     ) +
     guides(
       fill  = guide_colorbar(
-        ticks.colour = "grey50",
+        ticks.linewidth = 1,
+        ticks.colour = "black",
         frame.colour = "black",
-        title.position = "left", barwidth = 7, barheight = 1
+        title.position = "left",
+        barwidth = 10, barheight = 1
       ),
       alpha = "none"
     ) +
@@ -91,16 +109,16 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
       values = m_colors$cell_type
     ) +
     guides(
-      fill = guide_legend(title = NULL, nrow = 2, override.aes = list(size = 5))
+      fill = guide_legend(title = NULL, nrow = 2, override.aes = list(size = 6))
     ) +
     labs(x = NULL, y = NULL, title = "Cell Types") +
     theme_umap_2
   
   bottom_text <- sprintf(
-    "%s cells, %s (%s%%) cells with detected expression",
-    nrow(dat),
-    n_nonzero,
-    signif(100 * n_nonzero / nrow(dat), 3)
+    "%s cells: %s (%s%%) non-zero",
+    comma(nrow(dat)),
+    comma(n_nonzero),
+    signif(100 * n_nonzero / nrow(dat), 2)
   )
   
   p1 + p2 + plot_annotation(
