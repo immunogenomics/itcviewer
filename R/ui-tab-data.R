@@ -12,19 +12,19 @@ tabPanel(
       # column(width = 6, plotOutput("rnaseq_one_gene")),
       column(
         width = 6,
-        h3("Sorted bulk RNA-seq"),
-        htmlOutput("rnaseq_one_gene")
+        h3("Bulk RNA-seq with sorted T cell populations"),
+        htmlOutput("rnaseq_one_gene", style = "min-height: 350px;")
       ),
-      column(width = 6, DT::dataTableOutput("grad_table"))
+      column(width = 6, DT::dataTableOutput("grad_table"), style = "min-height: 674.4px;")
     ),
     fluidRow(
       # column(width = 12, plotOutput("scrnaseq_umap"))
       column(
         width = 12,
-        h3("Correlated genes"),
-        htmlOutput("rnaseq_heatmap"),
-        h3("Single-cell RNA-seq"),
-        htmlOutput("scrnaseq_umap")
+        h3("Correlated genes in bulk RNA-seq data"),
+        htmlOutput("rnaseq_heatmap", style = "width: 100%; height: 0; padding-top: 66.66%; position: relative;"),
+        h3("Single-cell RNA-seq expression and cell clusters"),
+        htmlOutput("scrnaseq_umap", style = "width: 100%; height: 0; padding-top: 60%; position: relative;")
       )
     ),
     
@@ -79,6 +79,14 @@ tabPanel(
       <li><a href='https://www.hms.harvard.edu/dms/immunology/fac/Brenner.php'>Dr. Michael B. Brenner</a></li>
       </ul>
       </p>"
+    ),
+    HTML(
+      "
+      <h2>Get the code</h2>
+      <p>Get the code for this website:
+<ul><li><a href='https://github.com/immunogenomics/itcviewer'>github.com/immunogenomics/itcviewer</a></li></ul>
+      </p>
+      "
     ),
     h3("Disclaimer"),
     # p(

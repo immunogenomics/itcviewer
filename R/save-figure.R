@@ -1,6 +1,6 @@
 save_figure <- function(
   filename = NULL, width = 6, height = 5, dpi = 100,
-  html_style = "height: 100%; width: 100%; object-fit: contain",
+  html_style = "height: 100%; width: 100%; object-fit: contain; min-height: 350px;",
   html_alt = NULL,
   ggplot_function = NULL
 ) {

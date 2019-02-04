@@ -38,14 +38,17 @@ plot_heatmap <- function(gene, n = 20, font_size = 1.5) {
     guides(
       fill = guide_colorbar(
         frame.colour = "black",
-        title = NULL, barwidth = 20,
-        ticks.colour = "white", ticks.linewidth = 1.5
+        title = "z-score",
+        barwidth = 20,
+        ticks.colour = "white",
+        ticks.linewidth = 1.5
       )
     ) +
     theme_void() +
     theme(
       plot.margin = margin(l = 5, t = 5, b = 5, r = 5),
       panel.border = element_rect(fill = NA, size = 0.3),
+      legend.title = element_text(size = 18),
       legend.text = element_text(size = 18),
       legend.position = "bottom",
       strip.text = element_text(

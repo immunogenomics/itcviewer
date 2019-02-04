@@ -2,11 +2,17 @@
 
 A data viewer for the Innate T Cell project.
 
-Check it out here: <https://immunogenomics.io/itc/>
+:rocket: Explore the data: <https://immunogenomics.io/itc/>
 
-Username: `tcell`
+:mortar_board: Read the paper:
 
-Password: `gradient`
+**A genome-wide innateness gradient defines the functional state of human innate T cells.**
 
-<img src="screenshot.png" />
+Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes, Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri, Patrick J. Brennan.
+
+bioRxiv 2018. https://doi.org/10.1101/280370
+
+<p align="center">
+  <img width="80%" src="screenshot.jpg">
+</p>
 
