@@ -33,6 +33,7 @@ source("R/load-data.R")
 
 source("R/plot-boxplot.R")
 source("R/plot-umap.R")
+source("R/plot-heatmap.R")
 source("R/save-figure.R")
 source("R/optimize-png.R")
 
