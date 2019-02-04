@@ -1,10 +1,10 @@
-# itcviewer
+# itcviewer <img src="https://avatars3.githubusercontent.com/u/13906712" width="121px" align="right" />
 
 A data viewer for the Innate T Cell project.
 
 ## :rocket: Explore the data
 
-<https://immunogenomics.io/itc/>
+**<https://immunogenomics.io/itc/>**
 
 <p align="center">
   <a href="https://immunogenomics.io/itc/"><img width="80%" src="screenshot.jpg"></a>
