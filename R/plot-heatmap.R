@@ -1,4 +1,5 @@
 plot_heatmap <- function(gene, n = 20, font_size = 1.5) {
+  this_gene <- gene
   ensembl_id <- names(which(gene_symbols == gene))
   cors <- as.numeric(cor(x = t(log2tpm[ensembl_id,]), y = t(log2tpm)))
   names(cors) <- rownames(log2tpm)
@@ -33,19 +34,23 @@ plot_heatmap <- function(gene, n = 20, font_size = 1.5) {
     scale_x_discrete(expand = c(0, 0)) +
     scale_y_discrete(
       expand = c(0, 0),
-      labels = function(x) gene_symbols[x]
+      labels = function(x) {
+        retval <- gene_symbols[x]
+        retval[retval == this_gene] <- paste("*", this_gene)
+        retval
+      }
     ) +
     guides(
       fill = guide_colorbar(
         frame.colour = "black",
-        title = "z-score",
+        title = "Scaled Expression",
         barwidth = 20,
         ticks.colour = "white",
         ticks.linewidth = 1.5
       )
     ) +
     theme_void() +
-    theme(
+    theme(plot.title = element_text(size = 18, margin = margin(b = 7)),
       plot.margin = margin(l = 5, t = 5, b = 5, r = 5),
       panel.border = element_rect(fill = NA, size = 0.3),
       legend.title = element_text(size = 18),
@@ -57,7 +62,8 @@ plot_heatmap <- function(gene, n = 20, font_size = 1.5) {
       axis.text.y = element_text(
         size = 18, face = "italic", margin = margin(r = 5)
       )
-    )
+    ) +
+    labs(title = glue("{n} genes correlated with {a}", n = n, a = this_gene))
 }
 plot_heatmap("HLA-B")
 # plot_heatmap("TRAV8-3")

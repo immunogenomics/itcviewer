@@ -211,7 +211,7 @@ server <- function(input, output, session) {
       if (sum(s$meta$marker > 10)) {
         retval <- save_figure(
           filename = glue("scrnaseq_umap_{marker}.png", marker = this_gene),
-          width = 10, height = 6, dpi = 300,
+          width = 10.5, height = 6, dpi = 300,
           html_alt = this_gene,
           html_style = "position:absolute; top:0; left:0; width:100%;",
           ggplot_function = function() { plot_umap(s$meta, title = this_gene) }

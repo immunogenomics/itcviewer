@@ -88,7 +88,7 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
       ),
       alpha = "none"
     ) +
-    labs(x = NULL, y = NULL, title = substitute(italic(x), list(x = title))) +
+    labs(x = "UMAP1", y = "UMAP2", title = substitute(italic(x), list(x = title))) +
     theme_umap_1
   
   # Make a plot showing the clustering results.
@@ -111,7 +111,7 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
     guides(
       fill = guide_legend(title = NULL, nrow = 2, override.aes = list(size = 6))
     ) +
-    labs(x = NULL, y = NULL, title = "Cell Types") +
+    labs(x = "UMAP1", y = "UMAP2", title = "Cell Types") +
     theme_umap_2
   
   bottom_text <- sprintf(
@@ -131,5 +131,5 @@ plot_umap <- function(dat, umap_x = "umap1", umap_y = "umap2", title = NULL) {
 # bad_gene <- "TRBV6-5"
 # bad_gene %in% rownames(s$log2cpm)
 # s$meta$marker <- as.numeric(s$log2cpm[bad_gene,])
-plot_umap(s$meta)
+# plot_umap(s$meta)
 # 
