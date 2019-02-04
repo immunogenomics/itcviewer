@@ -72,6 +72,7 @@ body {
 }
 
 .mypaper {
-    padding: 3rem;
-    border: 1px solid #ccc;
+  padding: 3rem;
+  border: 1px solid #ccc;
+  background-image: linear-gradient(to top, rgb(241, 241, 241), rgb(255, 255, 255));
 }

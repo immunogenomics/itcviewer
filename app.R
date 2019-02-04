@@ -13,7 +13,9 @@ pacman::p_load(
   "DT",
   "glue",
   "stringr",
-  "scales"
+  "scales",
+  "tidyr",
+  "seriation"
 )
 # devtools::install_github("thomasp85/patchwork")
 
@@ -64,95 +66,6 @@ which_numeric_cols <- function(dat) {
 
 # panel_one_gene <- tabPanel(
 #   title = "One Gene",
-panel_one_gene <- fluidPage(
-      h1("Innate T Cells"),
-      h2("Explore gene expression along the T cell innateness gradient"),
-      fluidRow(
-        # column(width = 6, plotOutput("rnaseq_one_gene")),
-        column(width = 6, htmlOutput("rnaseq_one_gene")),
-        column(width = 6, DT::dataTableOutput("grad_table"))
-      ),
-      fluidRow(
-        # column(width = 12, plotOutput("scrnaseq_umap"))
-        column(
-          width = 12,
-          h3("Single-cell RNA-seq"),
-          htmlOutput("scrnaseq_umap")
-        )
-      ),
-      
-      # hr(),
-      # h2("Options"),
-      # selectizeInput(
-      #   inputId = 'one_gene_symbol',
-      #   label = 'Gene:',
-      #   choices = NULL,
-      #   selected = 'TBX21',
-      #   size = 10
-      # ),
-      
-      # hr(),
-      # fluidRow(
-      #   plotOutput("rnaseq_one_gene")
-      #   #ggvisOutput("rnaseq_one_gene")
-      # ),
-      
-      br(),
-      hr(),
-      div(id = "geneinfo"),
-      
-      hr(),
-      HTML(
-        "<h2>Read the paper</h2>
-        <p class='mypaper'>
-        <b>A genome-wide innateness gradient defines the functional state of human innate T cells.</b>
-        Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes,
-        Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri,
-        Patrick J. Brennan. <i>bioRxiv</i> 2018.
-        <a href='https://doi.org/10.1101/280370'>https://doi.org/10.1101/280370</a>
-        </p>"
-      ),
-      h2("Contact us"),
-      p(
-        "Please ",
-        a("contact Dr. Maria Gutierrez", href = "mailto:mgutierr@broadinstitute.org"),
-        " with any questions, requests, or comments."
-      ),
-      HTML(
-        "<p>The data presented here comes from the laboratories of:
-        <ul>
-        <li><a href='https://connects.catalyst.harvard.edu/Profiles/display/Person/56904'>Dr. Patrick J. Brennan</a></li>
-        <li><a href='https://immunogenomics.hms.harvard.edu/'>Dr. Soumya Raychaudhuri</a></li>
-        <li><a href='https://www.hms.harvard.edu/dms/immunology/fac/Brenner.php'>Dr. Michael B. Brenner</a></li>
-        </ul>
-        </p>"
-      ),
-      h4("Disclaimer"),
-      # p(
-      #   "Currently, this is private data intended to be shared internally,",
-      #   " only with lab members (and reviewers)."
-      # ),
-      # p(
-      #   strong(
-      #     "Sharing any data from this site with anyone outside of the",
-      #     " lab is prohibited."
-      #   )
-      # ),
-      p(
-        "The content of this site is",
-        " subject to change at any time without notice. We hope that you",
-        " find it useful, but we provide it 'as is' without warranty of",
-        " any kind, express or implied."
-      ),
-      br()
-      
-    ) # fluidPage
-# ) # tabPanel
-
-panel_data <- tabPanel(
-  title = "Home",
-  panel_one_gene
-)
 
 ui <- fluidPage(
   useShinyjs(),
@@ -168,7 +81,7 @@ ui <- fluidPage(
   # Application title
   navbarPage(
     title = "Innate T Cells",
-    panel_data
+    source(file.path("R", "ui-tab-data.R"), local = TRUE)$value
   ),
   HTML(
     "<footer class='myfooter page-footer'>
@@ -253,6 +166,23 @@ server <- function(input, output, session) {
     retval
   })
   
+  output$rnaseq_heatmap <- renderText({
+    grad_table_rowid <- input$grad_table_rows_selected
+    if (length(grad_table_rowid)) {
+      this_gene <- grad_table_genes[grad_table_rowid]
+    }
+    retval <- "<div></div>"
+    if (this_gene %in% gene_symbols) {
+      retval <- save_figure(
+        filename = glue("rnaseq_heatmap_{marker}.png", marker = this_gene),
+        width = 9, height = 6, dpi = 300,
+        html_alt = this_gene,
+        ggplot_function = function() { plot_heatmap(this_gene) }
+      )
+    }
+    retval
+  })
+  
   # output$scrnaseq_umap <- renderPlot({
   #   width <- session$clientData$output_image_width
   #   grad_table_rowid <- input$grad_table_rows_selected
@@ -271,7 +201,7 @@ server <- function(input, output, session) {
       this_gene <- grad_table_genes[grad_table_rowid]
     }
     retval <- glue(
-      "<div>Fewer than 10 cells express <i>{gene}</i>.</div>",
+      "<div class='alert alert-warning'>Fewer than 10 cells express <i>{gene}</i>.</div>",
       gene = this_gene
     )
     if (this_gene %in% rownames(s$log2cpm)) {
