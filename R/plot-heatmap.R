@@ -36,7 +36,7 @@ plot_heatmap <- function(gene, n = 20, font_size = 1.5) {
       expand = c(0, 0),
       labels = function(x) {
         retval <- gene_symbols[x]
-        retval[retval == this_gene] <- paste("*", this_gene)
+        retval[retval == this_gene] <- paste("→", this_gene)
         retval
       }
     ) +
@@ -63,8 +63,12 @@ plot_heatmap <- function(gene, n = 20, font_size = 1.5) {
         size = 18, face = "italic", margin = margin(r = 5)
       )
     ) +
-    labs(title = glue("{n} genes correlated with {a}", n = n, a = this_gene))
+    labs(
+      title = bquote(
+        .(n) ~ "genes correlated with" ~ italic(.(this_gene))
+      )
+    )
 }
-plot_heatmap("HLA-B")
+# plot_heatmap("HLA-B")
 # plot_heatmap("TRAV8-3")
 
