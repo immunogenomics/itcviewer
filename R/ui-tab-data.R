@@ -56,7 +56,10 @@ tabPanel(
         width = 12,
         h3("Correlated genes in low input RNA-seq data"),
         # Put the selected gene first.
-        htmlOutput("rnaseq_heatmap", style = "width: 100%; height: 0; padding-top: 66.66%; position: relative;")
+        htmlOutput(
+          "rnaseq_heatmap",
+          style = "width: 100%; height: 0; padding-top: 87.5%; position: relative;"
+        )
       )
     ),
     

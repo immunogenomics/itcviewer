@@ -176,7 +176,7 @@ server <- function(input, output, session) {
     if (this_gene %in% gene_symbols) {
       retval <- save_figure(
         filename = glue("rnaseq_heatmap_{marker}.png", marker = this_gene),
-        width = 9, height = 6, dpi = 300,
+        width = 8, height = 7, dpi = 300,
         html_alt = this_gene,
         html_style = "position:absolute; top:0; left:0; width:100%;",
         ggplot_function = function() { plot_heatmap(this_gene) }
