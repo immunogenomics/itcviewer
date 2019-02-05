@@ -1,4 +1,7 @@
-message("MEMORY USAGE load-data.R 1: ", ceiling(pryr::mem_used() / 1e6), " MB")
+message(
+  "MEMORY USAGE load-data.R Before loading data: ",
+  ceiling(pryr::mem_used() / 1e6), " MB"
+)
 
 # Bulk RNA-seq data
 # --------------------------------------------------------------------------
@@ -51,7 +54,10 @@ all_gene_symbols <- unname(gene_symbols)
 # The default gene to plot
 one_gene_symbol_default <- "TBX21"
 
-message("MEMORY USAGE load-data.R 2: ", ceiling(pryr::mem_used() / 1e6), " MB")
+message(
+  "MEMORY USAGE load-data.R after bulk RNA-seq: ",
+  ceiling(pryr::mem_used() / 1e6), " MB"
+)
 
 #
 
@@ -60,7 +66,6 @@ message("MEMORY USAGE load-data.R 2: ", ceiling(pryr::mem_used() / 1e6), " MB")
 
 s <- environment()
 
-# Read 4 datasets: bcell, tcell, mono, fibro
 # Preprocess into a file for quick loading.
 s$log2cpm_file <- "data/scrnaseq-log2tpm.h5"
 s$log2cpm_dimnames_file <- "data/scrnaseq-log2tpm-dimnames.rda"
@@ -112,7 +117,10 @@ s$ix_include <- s$meta$cluster %in% names(which(table(s$meta$cluster) > 4))
 
 s$meta$marker <- as.numeric(s$log2cpm[one_gene_symbol_default,])
 
-message("MEMORY USAGE load-data.R 2: ", ceiling(pryr::mem_used() / 1e6), " MB")
+message(
+  "MEMORY USAGE load-data.R after single-cell RNA-seq: ",
+  ceiling(pryr::mem_used() / 1e6), " MB"
+)
 
 # ggplot(s$meta[order(-s$meta$n_gene),]) +
 #   aes(x = umap1, y = umap2, fill = n_gene) +
