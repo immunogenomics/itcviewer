@@ -69,14 +69,15 @@ tabPanel(
       <h2>Read the paper</h2>
       <div class='mypaper'>
       <h3>
-      <b>A genome-wide innateness gradient defines the functional state of human innate T cells.</b>
+      <b>Lymphocyte innateness defined by transcriptional states reflects a balance between proliferation and effector functions</b>
       </h3>
-      <p>Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes,
-      Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri,
-      Patrick J. Brennan.
+      <p>Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R. Mola,
+      Rafael B. Polidoro, Aparna Nathan, Hyun Kim, Susan Hannes,
+      Kamil Slowikowski, Gerald F. M. Watts, Ilya Korsunsky,
+      Michael B. Brenner, Soumya Raychaudhuri & Patrick J. Brennan.
       </p>
-      <p><i>bioRxiv</i> 2018.
-      <a href='https://doi.org/10.1101/280370'>https://doi.org/10.1101/280370</a>
+      <p><i>Nature Communications</i> 2019.
+      <a href='https://doi.org/10.1038/s41467-019-08604-4'>doi.org/10.1038/s41467-019-08604-4</a>
       </p>
       </div>"
     ),

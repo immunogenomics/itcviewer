@@ -11,11 +11,11 @@ A data viewer for the Innate T Cell project.
 
 ## :mortar_board: Read the paper
 
-**A genome-wide innateness gradient defines the functional state of human innate T cells.**
+**Lymphocyte innateness defined by transcriptional states reflects a balance between proliferation and effector functions**
 
-Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R Mola, Hyun Kim, Susan Hannes, Kamil Slowikowski, Gerald F. M. Watts, Michael Brenner, Soumya Raychaudhuri, Patrick J. Brennan.
+Maria Gutierrez-Arcelus, Nikola Teslovich, Alex R. Mola, Rafael B. Polidoro, Aparna Nathan, Hyun Kim, Susan Hannes, Kamil Slowikowski, Gerald F. M. Watts, Ilya Korsunsky, Michael B. Brenner, Soumya Raychaudhuri & Patrick J. Brennan.
 
-bioRxiv 2018. https://doi.org/10.1101/280370
+*Nature Communications* 2019. https://doi.org/10.1038/s41467-019-08604-4
 
 ## :floppy_disk: Get the data
 
