@@ -1,4 +1,4 @@
-# itcviewer <img src="https://avatars3.githubusercontent.com/u/13906712" width="121px" align="right" />
+# itcviewer <a href="https://github.com/immunogenomics"><img src="https://avatars3.githubusercontent.com/u/13906712" width="121px" align="right" /></a>
 
 A data viewer for the Innate T Cell project.
 
