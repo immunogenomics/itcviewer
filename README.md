@@ -6,6 +6,7 @@ A data viewer for the Innate T Cell project.
 
 <p align="center">
   <b>https://immunogenomics.io/itc</b>
+  
   <a href="https://immunogenomics.io/itc/"><img width="80%" src="screenshot.jpg"></a>
 </p>
 
